@@ -2,9 +2,7 @@ node('ravi-paajee') {
 	stage 'Checkout'
 		git branch: 'openshift', url: 'https://github.com/kmayer10/sample-vertx-kubernetes.git'
 	stage 'Package Application'
-		when {
-  			branch 'openshift'
-		}
+		when branch 'openshift'
 		sh 'mvn clean package -Dmaven.test.skip=true'
 	stage 'Build Docker Image'
 		sh 'cd account-vertx-service && docker build -t docker.io/kulbhushanmayer/node-app:v1.0 .'
