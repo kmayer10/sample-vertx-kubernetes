@@ -6,8 +6,7 @@ node('ravi-paajee') {
 	stage 'Build Docker Image'
 		sh 'cd account-vertx-service && docker build -t docker.io/kulbhushanmayer/node-app:v1.0 .'
 	stage 'Scan Image using Trivy'
-		sh 'rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.9.2/trivy_0.9.2_Linux-64bit.rpm && trivy image --exit-code 0 --format template --template "@contrib/junit.tpl" -o junit-report.xml
- --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
+		sh 'rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.9.2/trivy_0.9.2_Linux-64bit.rpm && trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
 	stage 'Push Docker Image to Registry'
 		sh 'docker push docker.io/kulbhushanmayer/node-app:v1.0'
 	stage 'Activate myproject'
