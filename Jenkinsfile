@@ -3,31 +3,31 @@ pipeline {
 		label 'ravi-paajee'
 	}
 	stages {
-		stage('Checkout')
+		stage('Checkout'){
 			git branch: 'openshift', url: 'https://github.com/kmayer10/sample-vertx-kubernetes.git'
 		}
-		stage('Package Application')
+		stage('Package Application'){
 			sh 'mvn clean package -Dmaven.test.skip=true'
 		}
-		stage('Build Docker Image')
+		stage('Build Docker Image'){
 			sh 'cd account-vertx-service && docker build -t docker.io/kulbhushanmayer/node-app:v1.0 .'
 		}
-		stage('Scan Image using Trivy')
+		stage('Scan Image using Trivy'){
 			sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
 		}
-		stage('Push Docker Image to Registry')
+		stage('Push Docker Image to Registry'){
 			sh 'docker push docker.io/kulbhushanmayer/node-app:v1.0'
 		}
-		stage('Activate myproject')
+		stage('Activate myproject'){
 			sh 'oc project app'
 		}
-		stage('Delete Service')
+		stage('Delete Service'){
 			sh 'oc delete svc/node-app'
 		}
-		stage('Delete Deployment Configuration')
+		stage('Delete Deployment Configuration'){
 			sh 'oc delete dc/node-app'
 		}
-		stage('Redeploy App')
+		stage('Redeploy App'){
 			sh 'oc new-app --docker-image="docker.io/kulbhushanmayer/node-app:v1.0"'
 		}
 	}
