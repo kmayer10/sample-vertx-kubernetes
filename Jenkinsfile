@@ -15,7 +15,7 @@ pipeline {
 		}
 		stage('Scan Image using Trivy'){
 			steps {
-				sh 'trivy image --exit-code 0 --format template --template "junit.tpl" -o junit-report.xml --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
+				sh 'trivy image --exit-code 0 --format template --template "@junit.tpl" -o junit-report.xml --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
 				junit allowEmptyResults: true, testResults: 'junit-report.xml'
 			}	
 		}
