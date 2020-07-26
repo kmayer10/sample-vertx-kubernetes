@@ -5,42 +5,42 @@ pipeline {
 	stages {
 		stage('Package Application'){
 			steps {
-				bat 'mvn clean package -Dmaven.test.skip=true'
+				sh 'mvn clean package -Dmaven.test.skip=true'
 			}
 		}
 		stage('Build Docker Image'){
 			steps {
-				bat 'cd account-vertx-service && docker build -t docker.io/kulbhubatanmayer/node-app:v1.0 .'
+				sh 'cd account-vertx-service && docker build -t docker.io/kulbhushanmayer/node-app:v1.0 .'
 			}	
 		}
-		stage('Scan Image using Trivy'){
+		//stage('Scan Image using Trivy'){
+			//steps {
+				//sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
+			//}	
+		//}
+		stage('Push Docker Image to Registry'){
 			steps {
-				bat 'trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/kulbhubatanmayer/node-app:v1.0'
-			}	
-		}
-		stage('Pubat Docker Image to Registry'){
-			steps {
-				bat 'docker pubat docker.io/kulbhubatanmayer/node-app:v1.0'
+				sh 'docker push docker.io/kulbhushanmayer/node-app:v1.0'
 			}	
 		}
 		stage('Activate myproject'){
 			steps {
-				bat 'oc project app'
+				sh 'oc project app'
 			}	
 		}
 		stage('Delete Service'){
 			steps {
-				bat 'oc delete svc/node-app'
+				sh 'oc delete svc/node-app'
 			}	
 		}
 		stage('Delete Deployment Configuration'){
 			steps {
-				bat 'oc delete dc/node-app'
+				sh 'oc delete dc/node-app'
 			}	
 		}
 		stage('Redeploy App'){
 			steps {
-				bat 'oc new-app --docker-image="docker.io/kulbhubatanmayer/node-app:v1.0"'
+				sh 'oc new-app --docker-image="docker.io/kulbhushanmayer/node-app:v1.0"'
 			}	
 		}
 	}
