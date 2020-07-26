@@ -3,11 +3,6 @@ pipeline {
 		label 'ravi-paajee'
 	}
 	stages {
-		stage('Checkout'){
-			steps{
-				git branch: 'openbatift', url: 'https://github.com/kmayer10/sample-vertx-kubernetes.git'
-			}
-		}
 		stage('Package Application'){
 			steps {
 				bat 'mvn clean package -Dmaven.test.skip=true'
