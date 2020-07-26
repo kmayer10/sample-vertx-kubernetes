@@ -4,31 +4,49 @@ pipeline {
 	}
 	stages {
 		stage('Checkout'){
-			git branch: 'openshift', url: 'https://github.com/kmayer10/sample-vertx-kubernetes.git'
+			steps{
+				git branch: 'openbatift', url: 'https://github.com/kmayer10/sample-vertx-kubernetes.git'
+			}
 		}
 		stage('Package Application'){
-			sh 'mvn clean package -Dmaven.test.skip=true'
+			steps {
+				bat 'mvn clean package -Dmaven.test.skip=true'
+			}
 		}
 		stage('Build Docker Image'){
-			sh 'cd account-vertx-service && docker build -t docker.io/kulbhushanmayer/node-app:v1.0 .'
+			steps {
+				bat 'cd account-vertx-service && docker build -t docker.io/kulbhubatanmayer/node-app:v1.0 .'
+			}	
 		}
 		stage('Scan Image using Trivy'){
-			sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/kulbhushanmayer/node-app:v1.0'
+			steps {
+				bat 'trivy image --exit-code 0 --severity HIGH,CRITICAL docker.io/kulbhubatanmayer/node-app:v1.0'
+			}	
 		}
-		stage('Push Docker Image to Registry'){
-			sh 'docker push docker.io/kulbhushanmayer/node-app:v1.0'
+		stage('Pubat Docker Image to Registry'){
+			steps {
+				bat 'docker pubat docker.io/kulbhubatanmayer/node-app:v1.0'
+			}	
 		}
 		stage('Activate myproject'){
-			sh 'oc project app'
+			steps {
+				bat 'oc project app'
+			}	
 		}
 		stage('Delete Service'){
-			sh 'oc delete svc/node-app'
+			steps {
+				bat 'oc delete svc/node-app'
+			}	
 		}
 		stage('Delete Deployment Configuration'){
-			sh 'oc delete dc/node-app'
+			steps {
+				bat 'oc delete dc/node-app'
+			}	
 		}
 		stage('Redeploy App'){
-			sh 'oc new-app --docker-image="docker.io/kulbhushanmayer/node-app:v1.0"'
+			steps {
+				bat 'oc new-app --docker-image="docker.io/kulbhubatanmayer/node-app:v1.0"'
+			}	
 		}
 	}
 }
